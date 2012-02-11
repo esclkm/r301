@@ -44,7 +44,7 @@ elseif ($a == 'update')
 		$db_ins['r301_date'] = (int)cot_import_date($r301_date[$key], true, false, 'D');
 		$db_ins['r301_type'] = cot_import($r301_type[$key], 'D', 'TXT');
 		$db_ins['r301_regex'] = (int)cot_import($r301_regex[$key], 'D', 'BOL');
-		$db->update($db_r301, $db_ins, "r301_id=$id");
+		$db->update($db_r301, $db_ins, "r301_id=$key");
 	}
 	cot_redirect(cot_url('admin', 'm=other&p=r301', '', true));
 }
