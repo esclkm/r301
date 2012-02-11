@@ -18,5 +18,7 @@ $L['301_to'] = 'Replace To';
 $L['301_regex'] = 'Regex';
 $L['301_date'] = 'Expires';
 $L['301_type'] = 'Type';
+$L['301_id2al'] = 'Redirect page IDs to aliases';
+$L['301_duplicate'] = 'Duplicate entry';
 
 ?>

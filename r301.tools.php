@@ -57,8 +57,40 @@ elseif ($a == 'add')
 	$db_ins['r301_regex'] = (int)cot_import('rregex', 'P', 'BOL');
 	if(!empty($db_ins['r301_from']) && !empty($db_ins['r301_to']))
 	{
-		$db->insert($db_r301, $db_ins);
+		if ($db->query("SELECT COUNT(*) FROM $db_r301 WHERE r301_from = '".$db->prep($db_ins['r301_from'])."'")->fetchColumn() > 0)
+		{
+			cot_error('301_duplicate', 'rfrom');
+		}
+		else
+		{
+			$db->insert($db_r301, $db_ins);
+		}
 	}
+	cot_redirect(cot_url('admin', 'm=other&p=r301', '', true));
+}
+elseif ($a == 'id2al')
+{
+	// Redirect IDs to aliases
+	require_once cot_incfile('page', 'module');
+	$res = $db->query("SELECT page_cat, page_id, page_alias FROM $db_pages WHERE page_alias != ''");
+	while ($row = $res->fetch())
+	{
+		$src_url = cot_url('page', array('c' => $row['page_cat'], 'id' => $row['page_id']));
+		$dest_url = cot_url('page', array('c' => $row['page_cat'], 'al' => $row['page_alias']));
+		// Search for duplicate source
+		if ($db->query("SELECT COUNT(*) FROM $db_r301 WHERE r301_from = '".$db->prep($src_url)."'")->fetchColumn() == 0)
+		{
+			// OK, insert
+			$db->insert($db_r301, array(
+				'r301_from' => $src_url,
+				'r301_to' => $dest_url,
+				'r301_date' => 0,
+				'r301_type' => '301',
+				'r301_regex' => 0
+			));
+		}
+	}
+	// Done
 	cot_redirect(cot_url('admin', 'm=other&p=r301', '', true));
 }
 
@@ -103,7 +135,10 @@ $t->assign(array(
 	'ADMIN_R301_DATE' => cot_selectbox_date($utime, 'short', 'rdate'),
 	'ADMIN_R301_REGEX' => cot_checkbox(false, 'rregex'),
 	'ADMIN_R301_TYPE' => cot_selectbox('301', 'rtype', array('301', 'rewrite'), array('301', 'rewrite'), false),
+	'ADMIN_R301_ID2AL_URL' => cot_url('admin', 'm=other&p=r301&a=id2al')
 ));
+
+cot_display_messages($t);
 
 $t->parse('MAIN');
 if (COT_AJAX)
