@@ -1,5 +1,8 @@
 <!-- BEGIN: MAIN -->
 <h2>r301</h2>
+
+{FILE "{PHP.cfg.themes_dir}/{PHP.cfg.defaulttheme}/warnings.tpl"}
+
 <form action="{ADMIN_R301_UPDATE_URL}" method="post" name="pageform">
 <table class="cells">
 	<tr>
@@ -55,5 +58,10 @@
 			<button type="submit" name="rpaste" value="ok" class="submit">{PHP.L.Add}</button>
 	</td>
 </table>	
-</form>	
+</form>
+
+<hr />
+<ul>
+	<li><a href="{ADMIN_R301_ID2AL_URL}">{PHP.L.301_id2al}</a></li>
+</ul>
 <!-- END: MAIN -->
